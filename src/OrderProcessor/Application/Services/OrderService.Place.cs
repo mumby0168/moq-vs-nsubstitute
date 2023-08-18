@@ -18,10 +18,11 @@ public partial class OrderService
                     x.ProductId,
                     x.Price))
             .ToList();
-        
-        var expectedDeliveryDate = _orderDateService.CalculateExpectedOrderDate(
-            customerId,
-            lines);
+
+        var expectedDeliveryDate = _orderDateService
+            .CalculateExpectedOrderDate(
+                customerId,
+                lines);
 
         var order = new Order(
             orderId,

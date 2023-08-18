@@ -23,13 +23,7 @@ public partial class OrderServiceTests
             {
                 new(
                     Guid.NewGuid(),
-                    10.0),
-                new(
-                    Guid.NewGuid(),
-                    20.0),
-                new(
-                    Guid.NewGuid(),
-                    30.0)
+                    10.0)
             });
 
 
@@ -38,6 +32,34 @@ public partial class OrderServiceTests
 
         // Assert
         result.Should().Be(orderId);
+    }
+
+    [Fact]
+    public async Task PlaceOrderAsync_Order_SavesOrderWithCorrectOrderId()
+    {
+        // Arrange
+        var sut = CreateSut();
+
+        var orderId = Guid.NewGuid();
+        _idGenerator.NewOrderId().Returns(orderId);
+
+        var placeOrderDto = new PlaceOrderDto(
+            Guid.NewGuid(),
+            new List<PlaceOrderDto.OrderLineDto>
+            {
+                new(
+                    Guid.NewGuid(),
+                    10.0)
+            });
+
+
+        // Act
+        await sut.PlaceOrderAsync(placeOrderDto);
+
+        // Assert
+        await _orderRepository
+            .Received(1)
+            .SaveAsync(Arg.Is<Order>(o => o.Id == orderId));
     }
 
     [Fact]
@@ -62,13 +84,7 @@ public partial class OrderServiceTests
             {
                 new(
                     Guid.NewGuid(),
-                    10.0),
-                new(
-                    Guid.NewGuid(),
-                    20.0),
-                new(
-                    Guid.NewGuid(),
-                    30.0)
+                    10.0)
             });
 
 
@@ -77,7 +93,8 @@ public partial class OrderServiceTests
 
         //Assert
         await _orderRepository.Received(1).SaveAsync(
-            Arg.Is<Order>(o =>
-                o.ExpectedDeliveryDate == orderDeliveryDate));
+            Arg.Is<Order>(
+                o =>
+                    o.ExpectedDeliveryDate == orderDeliveryDate));
     }
 }
