@@ -33,7 +33,7 @@ public partial class OrderServiceTests
         // Assert
         result.Should().Be(orderId);
     }
-    
+
     [Fact]
     public async Task PlaceOrderAsync_Order_SavesOrderWithCorrectOrderId()
     {
@@ -94,7 +94,10 @@ public partial class OrderServiceTests
 
         // Assert
         _orderRepository.Verify(
-            o => o.SaveAsync(It.Is<Order>(order => order.ExpectedDeliveryDate == orderDeliveryDate)),
+            o => o.SaveAsync(
+                It.Is<Order>(
+                    order =>
+                        order.ExpectedDeliveryDate == orderDeliveryDate)),
             Times.Once);
     }
 }

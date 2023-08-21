@@ -1,6 +1,6 @@
 namespace OrderProcessor.Domain;
 
-public class Order
+public class Order : IOrder
 {
     public Guid Id { get; }
     
